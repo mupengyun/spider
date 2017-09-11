@@ -299,4 +299,4 @@ if __name__ == "__main__":
         print ("结束爬取url" + url)
         log.writelines("结束爬取url" + url)
     log.close()
-    print "全部爬取结束"
+    print ("全部爬取结束")
