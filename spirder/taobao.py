@@ -19,6 +19,7 @@ def getImg(url):
     u.addheader('Cookie',
                 'x=__ll%3D-1%26_ato%3D0; _med=dw:1920&dh:1080&pw:1920&ph:1080&ist:0; otherx=e%3D1%26p%3D*%26s%3D0%26c%3D0%26f%3D0%26g%3D0%26t%3D0; l=Al1da54CRNlKwHobvO/Q-QXT7TdWepHr; tracknick=%5Cu94F6%5Cu6CF0%5Cu5F00%5Cu53D1%5Cu8005; t=464361a007c8463db07188b4d22a33e7; cookie2=15db57c7d8d2bf79c38c164f42411869; _tb_token_=8636c9e5b3de; cna=m6IGDtnCTBgCAdznFoIze/w0; pnm_cku822=112UW5TcyMNYQwiAiwZTXFIdUh1SHJOe0BuOG4%3D%7CUm5Ockp3TnVAe097Q3lGfCo%3D%7CU2xMHDJ7G2AHYg8hAS8WLgAgDlIzVTleIFp0InQ%3D%7CVGhXd1llXWBZYldsWGxUblFrXGFDd09xTXVKcU5yTHhCeEF0T2E3%7CVWldfS0RMQU7BiYaJAQqFTUKL3kpTHNXfAReJwlfCQ%3D%3D%7CVmhIGCUFOBgkEC0TMwg0CjcXKx8gHT0BPAk0FCgcIx4%2BAj8GO207%7CV25Tbk5zU2xMcEl1VWtTaUlwJg%3D%3D; res=scroll%3A1903*6130-client%3A1903*601-offset%3A1903*6130-screen%3A1920*1080; cq=ccp%3D1; isg=AsjIpxk4BUQNWGf6ulpvbZJUmTbQUQ1PkR4zwoJ5FMM2XWjHKoH8C15foQDU')
     html = u.open(url)
+    print (html.headers)
     bs = BeautifulSoup(html.read().decode('gbk'), "html.parser")
     #  总页数
     sourceUrls = [url]
@@ -32,20 +33,17 @@ def getImg(url):
             html = u.open(soureUrl)
             bs = BeautifulSoup(html.read().decode('gbk'), "html.parser")
             items = bs.findAll("div", {"class": "product"})
-            imgUrls = []
             for item in items:
                 # 天猫类目ID
                 categoryId = item.get("data-atp").split(",")[2]
                 imgUrl = item.a.img.attrs.values()[0]
-                imgUrls.append(imgUrl)
                 savefilename = os.path.join(savepath, categoryId)
-
                 mkdir(savefilename)
-                for url in imgUrls:
-                    u.retrieve('https:' + str(url), os.path.join(savefilename, url.split("/")[-1]))
+                u.retrieve('https:' + str(imgUrl), os.path.join(savefilename, imgUrl.split("/")[-1]))
         except IOError as e:
             print (e.message)
         continue
+
     u.close()
 
 if __name__ == "__main__":
@@ -292,6 +290,7 @@ if __name__ == "__main__":
         "https://list.tmall.com/search_product.htm?q=%C0%EE%BA%EC%B9%FA%BC%CA&type=p&spm=a220m.1000858.a2227oh.d100&from=.list.pc_1_searchbutton"
     ]
     log = open(savepath+"/log.txt","w")
+if __name__ == '__main__' :
     for url in urls:
         print ("开始爬取url" + url)
         log.writelines("开始爬取url" + url)
